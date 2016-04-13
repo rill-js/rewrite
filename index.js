@@ -1,6 +1,5 @@
-var toReg      = require("path-to-regexp");
-var replaceReg = /\$(\d+)|(?::(\w+))/g;
-
+var toReg = require('path-to-regexp')
+var replaceReg = /\$(\d+)|(?::(\w+))/g
 
 /**
  * Rwrite `from` to `to`.
@@ -11,25 +10,25 @@ var replaceReg = /\$(\d+)|(?::(\w+))/g;
  * @api public
  */
 module.exports = function (from, to) {
-	var keys = [],
-		reg = toReg(from, keys),
-		map = toMap(keys);
+  var keys = []
+  var reg = toReg(from, keys)
+  var map = toMap(keys)
 
-	return function rewritePath (ctx, next) {		
-		var req     = ctx.req;
-		var matches = req.pathname.match(reg);
-		if (!matches) return next();
+  return function rewritePath (ctx, next) {
+    var req = ctx.req
+    var matches = req.pathname.match(reg)
+    if (!matches) return next()
 
-		req.pathname = to.replace(replaceReg, function (_, n, name) {
-			if (name) return matches[map[name].index + 1];
-			return matches[n];
-		});
-		req.path = req.pathname + (req.search || "") + (req.hash || "");
-		req.original.url = req.path;
+    req.pathname = to.replace(replaceReg, function (_, n, name) {
+      if (name) return matches[map[name].index + 1]
+      return matches[n]
+    })
+    req.path = req.pathname + (req.search || '') + (req.hash || '')
+    req.original.url = req.path
 
-		return next();
-	}
-};
+    return next()
+  }
+}
 
 /**
  * Turn params array into a map for quick lookup.
@@ -39,13 +38,13 @@ module.exports = function (from, to) {
  * @api private
  */
 function toMap (params) {
-	var map = {};
+  var map = {}
 
-	for (var param, i = params.length; i--;) {
-		param           = params[i];
-		param.index     = i;
-		map[param.name] = param;
-	}
+  for (var param, i = params.length; i--;) {
+    param = params[i]
+    param.index = i
+    map[param.name] = param
+  }
 
-	return map;
+  return map
 }
