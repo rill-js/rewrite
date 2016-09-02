@@ -1,3 +1,5 @@
+'use strict'
+
 var toReg = require('path-to-regexp')
 var replaceReg = /\$(\d+)|(?::(\w+))/g
 
